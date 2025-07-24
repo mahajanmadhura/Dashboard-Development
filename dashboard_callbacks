@@ -1,0 +1,64 @@
+from dash import Input, Output
+import plotly.express as px
+import pandas as pd
+from app_instance import app
+from data import df
+
+@app.callback(
+    [Output("total-sales-kpi", "children"),
+     Output("total-profit-kpi", "children"),
+     Output("total-quantity-kpi", "children"),
+     Output("sales-trend", "figure"),
+     Output("sales-by-region", "figure"),
+     Output("profit-scatter", "figure"),
+     Output("category-pie", "figure")],
+    [Input("date-range", "start_date"),
+     Input("date-range", "end_date"),
+     Input("region-filter", "value"),
+     Input("category-filter", "value")]
+)
+def update_dashboard(start_date, end_date, regions, categories):
+    filtered_df = df.copy()
+
+    if start_date and end_date:
+        filtered_df = filtered_df[
+            (filtered_df["Date"] >= pd.to_datetime(start_date)) &
+            (filtered_df["Date"] <= pd.to_datetime(end_date))
+        ]
+
+    if regions:
+        filtered_df = filtered_df[filtered_df["Region"].isin(regions)]
+
+    if categories:
+        filtered_df = filtered_df[filtered_df["Category"].isin(categories)]
+
+    total_sales = filtered_df["Sales"].sum()
+    total_profit = filtered_df["Profit"].sum()
+    total_quantity = filtered_df["Quantity"].sum()
+
+    sales_trend = px.line(
+        filtered_df.groupby("Date", as_index=False)["Sales"].sum(),
+        x="Date", y="Sales", title="Sales Trend Over Time"
+    )
+
+    sales_by_region = px.bar(
+        filtered_df.groupby("Region", as_index=False)["Sales"].sum(),
+        x="Region", y="Sales", title="Sales by Region"
+    )
+
+    profit_scatter = px.scatter(
+        filtered_df, x="Sales", y="Profit", color="Product",
+        title="Profit vs Sales (by Product)"
+    )
+
+    category_pie = px.pie(
+        filtered_df, names="Category", values="Sales",
+        title="Sales Distribution by Category"
+    )
+
+    return (
+        f"${total_sales:,.0f}",
+        f"${total_profit:,.0f}",
+        f"{total_quantity:,.0f} units",
+        sales_trend, sales_by_region, profit_scatter, category_pie
+    )
