@@ -11,7 +11,7 @@ DURATION: 6 WEEKS
 
 MENTOR: NEELA SANTOSH
 
-DESCRIPTION OF THE PROJECT :
+**DESCRIPTION OF THE PROJECT** :
 
 This project is a **responsive, interactive sales analytics dashboard** built using **Dash**, **Plotly**, and **Dash Bootstrap Components**. It visualizes sales data across regions, products, and categories with rich KPIs and dynamic filtering.
 
