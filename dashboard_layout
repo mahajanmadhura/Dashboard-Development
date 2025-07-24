@@ -1,0 +1,63 @@
+from dash import dcc, html
+import dash_bootstrap_components as dbc
+from data import df
+
+dashboard_layout = dbc.Container([
+    dbc.Row([
+        dbc.Col(html.H1("Sales Performance Dashboard", className="text-center my-4"), width=12)
+    ]),
+
+    dbc.Row([
+        dbc.Col(dcc.DatePickerRange(
+            id="date-range",
+            min_date_allowed=df["Date"].min(),
+            max_date_allowed=df["Date"].max(),
+            start_date=df["Date"].min(),
+            end_date=df["Date"].max(),
+            display_format="YYYY-MM-DD"
+        ), width=3),
+
+        dbc.Col(dcc.Dropdown(
+            id="region-filter",
+            options=[{"label": r, "value": r} for r in df["Region"].unique()],
+            value=df["Region"].unique().tolist(),
+            multi=True,
+            placeholder="Select Regions"
+        ), width=3),
+
+        dbc.Col(dcc.Dropdown(
+            id="category-filter",
+            options=[{"label": c, "value": c} for c in df["Category"].unique()],
+            value=df["Category"].unique().tolist(),
+            multi=True,
+            placeholder="Select Categories"
+        ), width=3),
+    ], className="mb-4"),
+
+    dbc.Row([
+        dbc.Col(dbc.Card([
+            dbc.CardHeader("Total Sales"),
+            dbc.CardBody(html.H2(id="total-sales-kpi", className="text-center"))
+        ], color="primary"), width=4),
+
+        dbc.Col(dbc.Card([
+            dbc.CardHeader("Total Profit"),
+            dbc.CardBody(html.H2(id="total-profit-kpi", className="text-center"))
+        ], color="success"), width=4),
+
+        dbc.Col(dbc.Card([
+            dbc.CardHeader("Total Quantity"),
+            dbc.CardBody(html.H2(id="total-quantity-kpi", className="text-center"))
+        ], color="info"), width=4),
+    ], className="mb-4"),
+
+    dbc.Row([
+        dbc.Col(dcc.Graph(id="sales-trend"), width=6),
+        dbc.Col(dcc.Graph(id="sales-by-region"), width=6),
+    ]),
+
+    dbc.Row([
+        dbc.Col(dcc.Graph(id="profit-scatter"), width=6),
+        dbc.Col(dcc.Graph(id="category-pie"), width=6),
+    ]),
+], fluid=True)
