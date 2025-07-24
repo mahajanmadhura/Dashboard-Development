@@ -52,4 +52,8 @@ Simulated sales data includes:
 * **Category**: Electronics, Furniture
 * **Sales / Profit / Quantity**: Manually assigned numerical values
 
+**OUTPUT**:
+<img width="1919" height="1021" alt="Image" src="https://github.com/user-attachments/assets/906c13ae-c4ce-4cdf-a852-7953f4d78a0e" />
+<img width="1919" height="1016" alt="Image" src="https://github.com/user-attachments/assets/b0f83584-a108-4a2b-91fd-86f184b15b10" />
+
 
